@@ -35,7 +35,7 @@ class MainWindow(QMainWindow):
             "text-decoration: underline;"
         )
 
-        self.label3 = QLabel("Text", self) #last but not least the theird text box
+        self.label3 = QLabel("Text", self) #last but not least the third text box
         self.label3.setFont(QFont("Arial", 40))
         self.label3.setGeometry(200, 100, 400, 300)
         self.label3.setAlignment(Qt.AlignCenter)
@@ -64,7 +64,7 @@ class MainWindow(QMainWindow):
         self.piclabel.setGeometry(0, 550, 600, 50)
         self.label.setAlignment(Qt.AlignCenter)
 
-        self.piclabel = QLabel(self) #you guessed it thats right theird image
+        self.piclabel = QLabel(self) #you guessed it thats right third image
         self.piclabel.setGeometry(0, 100, 300, 250)
         self.pixmap = QPixmap("images/NEONPINK.jpg")
         self.piclabel.setPixmap(self.pixmap)
