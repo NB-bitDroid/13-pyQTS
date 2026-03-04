@@ -8,10 +8,11 @@ from PyQt5.QtCore import Qt
 class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
-        self.setWindowTitle("Hello!")
+        self.setWindowTitle("Hello!") #Title for the window
         self.setGeometry(00, 00, 800, 600)
         self.setWindowIcon(QIcon("images/download.png"))
-        self.label = QLabel("Hello", self)
+
+        self.label = QLabel("Hello", self) #The first text box
         self.label.setFont(QFont("Arial", 40))
         self.label.setGeometry(0, 0, 600, 100)
         self.label.setAlignment(Qt.AlignCenter)
@@ -23,7 +24,7 @@ class MainWindow(QMainWindow):
             "font-style: italic;"
         )
         
-        self.label2 = QLabel("Hi", self)
+        self.label2 = QLabel("Hi", self) #The second text box thing
         self.label2.setFont(QFont("Arial", 40))
         self.label2.setGeometry(00, 100, 200, 300)
         self.label2.setStyleSheet(
@@ -34,7 +35,7 @@ class MainWindow(QMainWindow):
             "text-decoration: underline;"
         )
 
-        self.label3 = QLabel("Text", self)
+        self.label3 = QLabel("Text", self) #last but not least the theird text box
         self.label3.setFont(QFont("Arial", 40))
         self.label3.setGeometry(200, 100, 400, 300)
         self.label3.setAlignment(Qt.AlignCenter)
@@ -47,7 +48,7 @@ class MainWindow(QMainWindow):
         )
 
 
-        self.piclabel = QLabel(self)
+        self.piclabel = QLabel(self) #now the first image
         self.piclabel.setGeometry(0, 200, 300, 250)
         self.pixmap = QPixmap("images/download.png")
         self.piclabel.setPixmap(self.pixmap)
@@ -55,15 +56,15 @@ class MainWindow(QMainWindow):
         self.piclabel.setGeometry(600, 0, 200, 600)
         self.label.setAlignment(Qt.AlignCenter)
 
-        self.piclabel = QLabel(self)
+        self.piclabel = QLabel(self) #second image
         self.piclabel.setGeometry(0, 100, 300, 250)
-        self.pixmap = QPixmap("images/NEONgreen (1).png")
+        self.pixmap = QPixmap("images/NEONgreen.png")
         self.piclabel.setPixmap(self.pixmap)
         self.piclabel.setScaledContents(True) 
         self.piclabel.setGeometry(0, 550, 600, 50)
         self.label.setAlignment(Qt.AlignCenter)
 
-        self.piclabel = QLabel(self)
+        self.piclabel = QLabel(self) #you guessed it thats right theird image
         self.piclabel.setGeometry(0, 100, 300, 250)
         self.pixmap = QPixmap("images/NEONPINK.jpg")
         self.piclabel.setPixmap(self.pixmap)
