@@ -9,7 +9,7 @@ class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
         self.setWindowTitle("Hello!") #Title for the window
-        self.setGeometry(00, 00, 800, 600)
+        self.setGeometry(1000, 500, 800, 600)
         self.setWindowIcon(QIcon("images/download.png"))
 
         self.label = QLabel("Hello", self) #The first text box
