@@ -1,6 +1,6 @@
 import sys
-from PyQt5.QtWidgets import QLabel, QWidget, QVBoxLayout, QHBoxLayout, QGridLayout, QMainWindow, QApplication
-from PyQt5.QtGui import QIcon, QFont, QPixmap
+from PyQt5.QtWidgets import QLabel, QWidget, QGridLayout, QMainWindow, QApplication
+from PyQt5.QtGui import QPixmap
 
 class MainWindow(QMainWindow):
     def __init__(self):
@@ -16,7 +16,6 @@ class MainWindow(QMainWindow):
         label1 = QLabel()
         self.pixmap = QPixmap("images/download.png")
         label1.setPixmap(self.pixmap)
-        label1
         label2 = QLabel()
         self.pixmap = QPixmap("images/NEONgreen.png")
         label2.setPixmap(self.pixmap)
@@ -36,6 +35,8 @@ class MainWindow(QMainWindow):
         grid.addWidget(label3, 0, 2)
         grid.addWidget(label4, 1, 0)
         grid.addWidget(label5, 0, 1)
+        grid.setColumnStretch(0, 1)
+        grid.setRowStretch(0, 1)
         self.central_widget.setLayout(grid)
 
 
