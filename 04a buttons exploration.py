@@ -8,17 +8,38 @@ import math
 
 
 class CustomButton(Q.QPushButton):
-    def __init__(self, text="", parent=None, is_mine=False):
+    def __init__(self, text="", parent=None, is_mine=False, button_width = 100, button_height = 50):
         super().__init__(text, parent)
         self.is_mine = is_mine
         self.neighbor_mines = 0
         self.clicked.connect(self.on_click)
+        self.setStyleSheet("padding: 0px; margin: 0px; font-size: 20px;")
+        self.setFixedSize(button_width, button_height)
 
     def on_click(self):
+        self.reveal()
+        self.setDisabled(True)
+        # if self.is_mine:
+        #     self.setStyleSheet("background-color: red")
+        # else:
+        #     self.setStyleSheet("background-color: green")
+
+    @property
+    def is_mine(self) -> bool:
+        return self._is_mine
+    
+    @is_mine.setter
+    def is_mine(self, is_mine:bool):
+        self._is_mine = is_mine
+
+    def reveal(self):
         if self.is_mine:
-            self.setStyleSheet("background-color: red")
+            self.setText("💣")
+            self.setStyleSheet(self.styleSheet() + "background-color: red;")
         else:
-            self.setStyleSheet("background-color: green")
+            self.setText(str(self.neighbor_mines))
+            self.setStyleSheet(self.styleSheet() +
+                                "background-color: lightgreen")
 
 
 
@@ -48,13 +69,11 @@ class MainWindow(Q.QMainWindow):
     def create_buttons(self, rows, cols, container):
         self.mine_list = []
         button_width = math.floor(self.grid_widget.width() / cols)
-        button_hight = math.floor(self.grid_widget.height() / rows)
+        button_height = math.floor(self.grid_widget.height() / rows)
         for i in range(rows):
             self.mine_list.append([])
             for j in range(cols):
-                button = CustomButton(f"{i}, {j}", self)
-                button.setStyleSheet("padding: 0px; margin: 0px:")
-                button.setFixedSize(50, 50)
+                button = CustomButton(f"{i}, {j}", self, button_height=button_height, button_width=button_width)
                 container.addWidget(button, i, j)
                 self.mine_list[i].append(button)
 
@@ -84,7 +103,6 @@ class MainWindow(Q.QMainWindow):
                     mine_count +=1
         return mine_count
 
-
     def create_neighbor_mine_counts(self):
         #loop through each cell in our 2d list
         #check all cells around it 
@@ -93,8 +111,8 @@ class MainWindow(Q.QMainWindow):
         for i in range(len(self.mine_list)):
             for j in range(len(self.mine_list[i])):
                 self.mine_list[i][j].neighbor_mines = self.get_mines_counts(i, j)
-                self.mine_list[i][j].setText(
-                    str(self.mine_list[i][j].neighbor_mines))
+                # self.mine_list[i][j].setText(
+                #     str(self.mine_list[i][j].neighbor_mines))
 
     def initUI(self):
         self.create_layout()
