@@ -1,5 +1,5 @@
 import PyQt5.QtWidgets as Q
-from PyQt5.QtGui import QIcon
+from PyQt5.QtGui import QIcon, QFont
 from PyQt5.QtCore import QSize, Qt
 import sys
 import random
@@ -10,13 +10,20 @@ import math
 class CustomButton(Q.QPushButton):
     def __init__(self, text="", parent=None, is_mine=False, button_width = 100, button_height = 50):
         super().__init__(text, parent)
+        self.reset()
         self.is_mine = is_mine
-        self.neighbor_mines = 0
-        self.is_revealed = False
-        self.is_flagged = False
         self.clicked.connect(self.on_click)
         self.setStyleSheet("padding: 0px; margin: 0px; font-size: 20px;")
         self.setFixedSize(button_width, button_height)
+
+    def reset(self):
+        self.is_mine = False
+        self.neighbor_mines = 0
+        self._is_revealed = False
+        self.is_flagged = False
+        self.setStyleSheet(self.styleSheet() +
+                           "background-color: none;")
+        self.setDisabled(False)
 
     def on_click(self):
         if not self.is_revealed:
@@ -46,6 +53,10 @@ class CustomButton(Q.QPushButton):
         self._is_revealed = is_revealed
         if self._is_revealed:
             self.reveal()
+        else:
+            self.setText("")
+            self.setStyleSheet(self.styleSheet() + 
+                               "background-color: none")
 
     @property
     def is_flagged(self):
@@ -67,8 +78,10 @@ class CustomButton(Q.QPushButton):
             self.setText(str(self.neighbor_mines))
             self.setStyleSheet(self.styleSheet() +
                                 "background-color: lightgreen;")
-        if end_game and self.is_flagged:
-            self.setText("🚩")
+        if end_game:
+            self.setDisabled(True)
+            if self.is_flagged:
+                self.setText("🚩")
 
     # #This is overriding the parent class
     def mousePressEvent(self, event):
@@ -80,10 +93,25 @@ class CustomButton(Q.QPushButton):
 
 
 
-class WinScreen(Q.QDialog):
-    def __init__(self, parent = None):
+class EndScreen(Q.QDialog):
+    def __init__(self, parent = None, title="Game over", message="you win!", won=True):
         super().__init__(parent)
-        self.setWindowTital("You Win")
+        self.setWindowTitle(title)
+        self.label = Q.QLabel(message, self)
+        #added - change label font size:
+        self.label.setFont(QFont("Arial", 40))
+        layout = Q.QVBoxLayout()
+        self.setLayout(layout)
+        layout.addWidget(self.label, alignment=Qt.AlignCenter)
+        layout.addWidget(Q.QLabel("Retry?", self), alignment=Qt.AlignCenter)
+        button_row = Q.QHBoxLayout()
+        yes_button = Q.QPushButton("Yes", self)
+        no_button = Q.QPushButton("No", self)
+        button_row.addWidget(yes_button)
+        button_row.addWidget(no_button)
+        layout.addLayout(button_row)
+        no_button.clicked.connect(self.reject)
+        yes_button.clicked.connect(self.accept)
 
 
 
@@ -95,8 +123,8 @@ class MainWindow(Q.QMainWindow):
         self.setMinimumHeight(550)
         self.clicked_count = 0
         self.total_mines = 20
-        self.rows = 10
-        self.cols = 10
+        self.rows = 20
+        self.cols = 20
         self.initUI()
 
     def create_layout(self):
@@ -126,31 +154,51 @@ class MainWindow(Q.QMainWindow):
                 container.addWidget(button, i, j)
                 self.mine_list[i].append(button)
 
-    def space_clicked(self, row, col):
-        print(row, col)
+    def space_clicked(self, row, col, testing=True):
         self.clicked_count += 1
         if self.clicked_count == 1:
             #await our first click
             self.place_mines(self.total_mines, row, col)
             self.create_neighbor_mine_counts()
+            if testing:
+                self.reveal_all(False)
         if self.mine_list[row][col].is_mine:
-            print("game over")
-            #reveal all cells
-            for row in self.mine_list:
-                for cell in row:
-                    cell.reveal(end_game = True)
+            self.do_ending("KABOOM!", "They'll have to glue you back together IN HELL!")
             return #do some game over thing
 
         elif self.mine_list[row][col].neighbor_mines == 0:
             for i in range(-1, 2): #-1, 0, 1
                 #i represents the row above, same row, row below
                 current_row = row + i 
-                for j in range(-1,2):
+                for j in range(-1, 2):
                     current_col = col + j
                     if self.is_valid_index_in_mines_list(current_row, current_col):
                         self.mine_list[current_row][current_col].click()
         if self.clicked_count == (self.rows * self.cols) - self.total_mines:
-            print("you win!!!")
+            self.do_ending("good job...", "yay... you did it... please leave now.")
+
+    def do_ending(self, title, message):
+        self.reveal_all(True)
+        end_screen = EndScreen(title = title, message=message)
+        again = end_screen.exec()
+        if again == Q.QDialog.Accepted:
+            print("playing again")
+            self.restart_game()
+        else:
+            print("not playing again")
+            self.close()
+
+    def restart_game(self):
+        while self.grid.count():
+            item = self.grid.takeAt(0)
+            del item
+        self.create_buttons(self.rows, self.cols, self.grid)
+        self.clicked_count = 0
+
+    def reveal_all(self, end_game = True):
+        for row in self.mine_list:
+            for cell in row:
+                cell.reveal(end_game=end_game)
 
     def place_mines(self, num_of_mines, avoid_row = -100, avoid_col = -100):
         self.mine_count = num_of_mines
@@ -194,8 +242,7 @@ class MainWindow(Q.QMainWindow):
 
     def initUI(self):
         self.create_layout()
-        self.create_buttons(10, 10, self.grid)
-
+        self.restart_game()
 
 
 
