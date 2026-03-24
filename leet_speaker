@@ -1,0 +1,52 @@
+
+class LeetSpeaker():
+    leet_table = {
+        "A":("4", "@"),
+        "B":("8", "|3"),
+        "C":("(", "<"),
+        "D":("|)", "[)"),
+        "E":("3", "€"),
+        "F":("|=", "ph"),
+        "G":("6", "9"),
+        "H":("|-|", "#"),
+        "I":("1", "!"),
+        "J":("_|", "_/"),
+        "K":("|<", "|{"),
+        "L":("1", "|_"),
+        "M":("//\\", "|/|"),
+        "N":("||", "//"),
+        "O":("0", "()"),
+        "P":("|*", "|o"),
+        "Q":("0_", "(,)"),
+        "R":("|2", "12"),
+        "S":("5", "$"),
+        "T":("7", "+"),
+        "U":("|_|", "(_)"),
+        "V":("/", "|"),
+        "W":("//", "vv"),
+        "X":("><", "}{"),
+        "Y":("'/", "j"),
+        "Z":("2", "7_"),
+    }
+#added try and exept to catch letters not in the leet_table
+#added it so user can only pick 1 or 0 for index and make sure its an int and not any thing else
+
+    @staticmethod
+    def translate(text:str, index:int):
+        try:
+            if index < 0:
+                raise ValueError("Index cannot be more then Two or less then One.")
+            if index > 1:
+                index = index%2
+        except TypeError:
+            pass
+        if index == 1 or index == 0:
+            text = text.upper() #thins makes it case-insensitive
+            for letter in text:    
+                try:
+                    text = text.replace(letter, LeetSpeaker.leet_table[letter][int(index)])
+                except KeyError:
+                    continue
+            print(text)
+        else:
+            raise TypeError("integer required for leet conversion")
