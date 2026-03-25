@@ -1,12 +1,6 @@
-
 from PyQt5.QtWidgets import QApplication, QMainWindow, QLineEdit, QPushButton, QLabel
 from PyQt5.QtGui import QPixmap
 import sys
-#QApplication - Runs the GUI (Graphical User Interface)
-#QMainWindow - Creates the main application window
-#Qline Edit - Creates a text box
-#QPushButton - Creates a clickable button
-# DRY princable means Dont Reapet Yourself
 
 
 
@@ -39,6 +33,7 @@ class Window(QMainWindow):
         "Y":("'/", "j"),
         "Z":("2", "7_"),
     }
+
     def __init__(self):
         super().__init__()
         self.setGeometry(300,400,700,395)
@@ -46,27 +41,27 @@ class Window(QMainWindow):
         #create a line edit widget:
 
         self.line_edit = QLineEdit(self)
-        self.line_edit.setGeometry(10, 10, 210, 40)
-        self.line_edit.setPlaceholderText("Enter your name:")
+        self.line_edit.setGeometry(10, 10, 270, 40)
+        self.line_edit.setPlaceholderText("Enter your password:")
         self.assignStyleSheet(self.line_edit)
 
         self.button = QPushButton("Submit", self)
-        self.button.setGeometry(220,10,100,40)
+        self.button.setGeometry(280,10,100,40)
         self.assignStyleSheet(self.button)
         self.button.clicked.connect(self.submit)
 
         self.button1 = QPushButton("option1", self)
-        self.button1.setGeometry(320,10,100,40)
+        self.button1.setGeometry(385,10,100,40)
         self.assignStyleSheet(self.button1)
 
         self.button2 = QPushButton("option2", self)
-        self.button2.setGeometry(420,10,100,40)
+        self.button2.setGeometry(485,10,100,40)
         self.assignStyleSheet(self.button2)
-        self.button2.clicked.connect(self.thing)
+        self.button2.clicked.connect(self.option2)
 
         self.label = QLabel(self)
-        self.label.setText("Text output here")
-        self.label.setGeometry(10, 60, 200, 40)
+        self.label.setText("Leek speak password:")
+        self.label.setGeometry(10, 60, 1000, 40)
         self.assignStyleSheet(self.label)
 
         self.piclabel = QLabel(self)
@@ -74,7 +69,7 @@ class Window(QMainWindow):
         self.pixmap = QPixmap("images/lock.png")
         self.piclabel.setPixmap(self.pixmap)
 
-    def thing(self):
+    def option2(self):
         self.index = 1
 
     def submit(self):
